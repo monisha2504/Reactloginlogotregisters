@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-
-class HeaderComponent extends Component {
+class Navbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      userid: localStorage.getItem("userid"),
+    };
   }
 
   render() {
@@ -34,16 +35,18 @@ class HeaderComponent extends Component {
                   </a>
                 </li>
               </ul>
-              <form className="form-inline my-3 my-lg-3">
+              <div
+                className="collapse navbar-collapse"
+                id="navbarSupportedContent"
+              >
                 <ul className="navbar-nav mr-auto">
-                  <li className="nav-item active">
-                    <a className="nav-link" href="/login">
-                      <b>Sign In</b>
-                      <span className="sr-only">(current)</span>
-                    </a>{" "}
+                  <li className="nav-item">
+                    <a className="nav-link" href="/users">
+                      User
+                    </a>
                   </li>
                 </ul>
-              </form>
+              </div>
             </div>
           </nav>
         </header>
@@ -52,4 +55,4 @@ class HeaderComponent extends Component {
   }
 }
 
-export default HeaderComponent;
+export default Navbar;

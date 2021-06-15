@@ -1,24 +1,27 @@
 import axios from "axios";
 
-const USER_API_BASE_URL = "http://localhost:8082/api/users";
-
-class UserService{
-    async getAllUsers(){
-        return await axios.get(USER_API_BASE_URL);
-    }
-   
-   async deleteUserByUserId(userid){
-        return await axios.delete(USER_API_BASE_URL + "/" + userid);
-    }
-    async createUser(user){
-    return await axios.post(USER_API_BASE_URL,user);
-    }
-    async updateUser(user,userid){
-        return await axios.put(USER_API_BASE_URL+"/update/"+userid,user);
-        }
-    async viewUser(userid){
-            return await axios.get(USER_API_BASE_URL+"/"+userid);
-            }
-        
+const USER_API_BASE_URL = "http://localhost:8082/api";
+class UserService {
+  async getAllUsers() {
+    return await axios.get(USER_API_BASE_URL + "/users");
+  }
+  async deleteUserByUserId(userId) {
+    return await axios.delete(USER_API_BASE_URL + "/users/" + userId);
+  }
+  async createUser(user) {
+    return await axios.post(USER_API_BASE_URL + "/users/add", user);
+  }
+  async updateUser(user, userId) {
+    return await axios.put(USER_API_BASE_URL + "/users/update/" + userId, user);
+  }
+  async viewUser(userId) {
+    return await axios.get(USER_API_BASE_URL + "/users/" + userId);
+  }
+  async login(loginentity) {
+    return await axios.post(USER_API_BASE_URL + "/login", loginentity);
+  }
+  async logout(userId) {
+    return await axios.get(USER_API_BASE_URL + "/logout/" + userId);
+  }
 }
 export default new UserService();
