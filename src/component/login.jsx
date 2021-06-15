@@ -3,8 +3,9 @@ import UserService from "../services/userService";
 import { updateState, logoutAction } from "../action/loginAction";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import Joi from "joi-browser";
 
-document.title = "Login Page";
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -12,35 +13,72 @@ class Login extends Component {
       userId: "",
       password: "",
       userRole: "",
-      error: {},
+      isLoggedIn:"false",
+      errors: {},
     };
-
+   
     this.changeUserIdHandler = this.changeUserIdHandler.bind(this);
     this.changePasswordHandler = this.changePasswordHandler.bind(this);
     this.changeUserRoleHandler = this.changeUserRoleHandler.bind(this);
-    this.saveUser = this.saveUser.bind(this);
+    
   }
+  schema = {
+     
+    userId: Joi.string().min(3).alphanum().required(),
+    password: Joi.string().min(8).max(15).alphanum().required(),
+    userRole: Joi.string().required(),
+    isLoggedIn:Joi.string().required(),
+  };
 
-  saveUser = (e) => {
+  validate = () => {
+
+    const errors = {};
+    
+    const result = Joi.validate(this.state,this.schema, {
+      abortEarly: false,allowUnknown:true,
+    });
+   
+    if (result.error !== null) {
+     
+      for (let err of result.error.details) {
+        errors[err.path[0]] = err.message;
+      }
+    }
+  
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
+
+  handleOnSubmit =async (e) => {
     e.preventDefault();
     console.log("userRole=>" + this.state.userRole);
+    const errors = this.validate()
+   this.setState({ errors: errors || {} });
+    if (errors) return;
+    
 
-    this.props.updateState(true);
     let loginentity = {
       userId: this.state.userId,
       password: this.state.password,
       userRole: this.state.userRole,
     };
-
     console.log("loginentity => " + JSON.stringify(loginentity));
-    UserService.login(loginentity).then((res) => {
-      localStorage.setItem("userId", this.state.userId);
-      if (this.state.userRole === "Admin") {
-        this.props.history.push(`/admin-home`);
-      } else {
-        this.props.history.push(`/customer`);
-      }
-    });
+    
+      UserService.login(loginentity).then((res) => {
+        if(res===null){
+          this.state.errors.isLoggedIn="Invalid credentials";
+          this.forceUpdate();
+        }
+        else{
+          localStorage.setItem("userId", this.state.userId);
+          this.props.updateState(true);
+          if (this.state.userRole === "Admin") {
+            this.props.history.push(`/users`);
+          } else {
+            this.props.history.push(`/customer`);
+          }
+        }
+     
+      })
   };
   changeUserIdHandler = (event) => {
     this.setState({ userId: event.target.value });
@@ -66,41 +104,58 @@ class Login extends Component {
               >
                 <h3 className="text-center">Login Page</h3>
                 <div className="card-body">
-                  <form>
+                  <div>
+                  <form  className="border-rounded p-3 bg-light"
+                    onSubmit={this.handleOnSubmit}>
+                      
                     <div className="form-group">
-                      <label>
-                        <i class="fas fa-user-circle"></i>UserId
+                      <label for="userId">
+                        <i className="fas fa-user-circle"></i>UserId
                       </label>
                       <input
                         placeholder="UserId"
+                        id="userId"
                         type="text"
                         name="userId"
                         className="form-control"
                         value={this.state.userId}
                         onChange={this.changeUserIdHandler}
                       />
+                      
+                      {this.state.errors && (
+                      <small id="userId" className="form-text text-danger">
+                        {this.state.errors.userId}
+                      </small>
+                       )}
                     </div>
                     <div className="form-group">
-                      <label>
-                        <i class="fas fa-lock"></i>Password
+                      <label for="password">
+                        <i className="fas fa-lock"></i>Password
                       </label>
                       <input
                         placeholder="Password"
+                        id="password"
                         type="Password"
                         name="password"
                         className="form-control"
                         value={this.state.password}
                         onChange={this.changePasswordHandler}
                       />
+                        {this.state.errors && (
+                        <small id="password" className="form-text text-danger">
+                           {this.state.errors.password}
+                            </small>
+                            )}
                     </div>
                     <div className="form-group">
-                      <label>
-                        <i class="fad fa-users"></i>UserRole
+                      <label for="userRole">
+                        <i className="fad fa-users"></i>UserRole
                       </label>
                       <select
-                        defaultValue=""
+                        
                         className="form-control"
                         name="userRole"
+                        id="userRole"
                         value={this.state.userRole}
                         onChange={this.changeUserRoleHandler}
                       >
@@ -108,14 +163,24 @@ class Login extends Component {
                         <option value="Admin">Admin</option>
                         <option value="customer">customer</option>
                       </select>
+                      {this.state.errors && (
+                    <small id="userRole" className="form-text text-danger">
+                     {this.state.errors.userRole}
+                    </small>
+                    )}
                     </div>
                     <button
                       disabled={!this.state.userRole}
                       className="btn btn-success"
-                      onClick={this.saveUser}
+                      type="submit"
                     >
-                      Login
+                    Login
                     </button>
+                    {this.state.errors && (
+                      <small id="isLoggedIn" className="form-text text-danger">
+                        {this.state.errors.isLoggedIn}
+                      </small>
+                       )}
 
                     <div className="mt-2 text-center">
                       <small>
@@ -128,6 +193,7 @@ class Login extends Component {
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }

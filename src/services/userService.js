@@ -18,7 +18,10 @@ class UserService {
     return await axios.get(USER_API_BASE_URL + "/users/" + userId);
   }
   async login(loginentity) {
-    return await axios.post(USER_API_BASE_URL + "/login", loginentity);
+    return await axios.post(USER_API_BASE_URL + "/login", loginentity)
+    .catch(function(error){
+      return null;
+    });
   }
   async logout(userId) {
     return await axios.get(USER_API_BASE_URL + "/logout/" + userId);

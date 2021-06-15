@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import createUser from "./component/createUser";
 import ListAllUsers from "./component/listAllUsers";
 import UpdateUser from "./component/updateUser";
-import ViewUser from "./component/viewUser";
+import viewUser from "./component/viewUser";
 import Register from "./component/Register";
 import Login from "./component/login";
 import Home from "./component/home";
 import customer from "./component/customer";
-import AdminHome from "./component/adminHome";
+
 
 function App() {
   return (
@@ -25,9 +25,8 @@ function App() {
             exact
             component={UpdateUser}
           ></Route>
-          <Route path="/view-user/:userid" exact component={ViewUser}></Route>
-          <Route path="/admin-home" exact component={AdminHome}></Route>
-          <div className="ss" style={{ height: "750px" }}>
+          <Route path="/view-user/:userid" exact component={viewUser}></Route>
+          <div className="ss" style={{ height: "850px" }}>
             <Route path="/register" exact component={Register}></Route>
             <Route path="/login" exact component={Login}></Route>
           </div>

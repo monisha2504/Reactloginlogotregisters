@@ -9,7 +9,7 @@ export const updateState = (isLoggedIn) => async (dispatch) => {
     console.log(error);
   }
 };
-export const loginAction = () => {
+export const loginAction = ()=>{
   return {
     type: "LOGGED_IN",
   };

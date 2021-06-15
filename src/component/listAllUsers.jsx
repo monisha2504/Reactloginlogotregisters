@@ -25,7 +25,9 @@ class ListAllUsers extends Component {
   };
 
   viewUser(userId) {
+    console.log('userid=>'+userId)
     this.props.history.push(`/view-user/${userId}`);
+
   }
   updateUser(userId) {
     this.props.history.push(`/update-user/${userId}`);
@@ -41,15 +43,24 @@ class ListAllUsers extends Component {
     console.log("logout=>" + this.state.userId);
     this.props.updateState(false);
     UserService.logout(this.state.userId).then((res) => {
+      localStorage.removeItem("userId");
       this.props.history.push(`/home`);
     });
   }
 
   componentDidMount() {
-    UserService.getAllUsers().then((res) => {
-      console.log("data: ", res.data);
-      this.setState({ users: res.data });
-    });
+    console.log('userid=>'+this.props.isLoggedIn)
+    if(this.props.isLoggedIn){
+      UserService.getAllUsers().then((res) => {
+        console.log("data: ", res.data);
+        this.setState({ users: res.data });
+      });
+    }
+    else{
+      alert('Please Login');
+      this.props.history.push('/login');
+    }
+    
   }
 
   render() {
@@ -121,9 +132,9 @@ class ListAllUsers extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (mystate) => {
   return {
-    isLoggedIn: state.login,
+    isLoggedIn: mystate.isLoggedIn
   };
 };
 

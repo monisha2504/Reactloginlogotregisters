@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderComponent from "./headercomponent";
 import FooterComponent from "./footercomponent";
-document.title = "Home";
+
 class Home extends Component {
   state = {};
   render() {

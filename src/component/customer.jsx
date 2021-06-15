@@ -22,8 +22,20 @@ class customer extends Component {
       this.props.history.push(`/home`);
     });
   }
-
+  componentDidMount() {
+    console.log('userid=>'+this.props.isLoggedIn)
+    if(this.props.isLoggedIn){
+      
+    }
+    else{
+      alert('Please Login');
+      this.props.history.push('/login');
+    }
+    
+  }
   render() {
+    
+    
     return (
       <div className="container">
         <HeaderComponent />
@@ -34,11 +46,12 @@ class customer extends Component {
         </Link>
       </div>
     );
+ 
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (mystate) => {
   return {
-    isLoggedIn: state.login,
+    isLoggedIn: mystate.isLoggedIn,
   };
 };
 
