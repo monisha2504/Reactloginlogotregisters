@@ -9,7 +9,11 @@ class UserService {
     return await axios.delete(USER_API_BASE_URL + "/users/" + userId);
   }
   async createUser(user) {
-    return await axios.post(USER_API_BASE_URL + "/users/add", user);
+    return await axios
+      .post(USER_API_BASE_URL + "/users/add", user)
+      .catch(function (error) {
+        return null;
+      });
   }
   async updateUser(user, userId) {
     return await axios.put(USER_API_BASE_URL + "/users/update/" + userId, user);
@@ -18,10 +22,11 @@ class UserService {
     return await axios.get(USER_API_BASE_URL + "/users/" + userId);
   }
   async login(loginentity) {
-    return await axios.post(USER_API_BASE_URL + "/login", loginentity)
-    .catch(function(error){
-      return null;
-    });
+    return await axios
+      .post(USER_API_BASE_URL + "/login", loginentity)
+      .catch(function (error) {
+        return null;
+      });
   }
   async logout(userId) {
     return await axios.get(USER_API_BASE_URL + "/logout/" + userId);

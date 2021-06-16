@@ -25,13 +25,13 @@ class ListAllUsers extends Component {
   };
 
   viewUser(userId) {
-    console.log('userid=>'+userId)
+    console.log("userid=>" + userId);
     this.props.history.push(`/view-user/${userId}`);
-
   }
   updateUser(userId) {
     this.props.history.push(`/update-user/${userId}`);
   }
+
   deleteUserByUserId(userId) {
     UserService.deleteUserByUserId(userId).then((res) => {
       this.setState({
@@ -39,6 +39,9 @@ class ListAllUsers extends Component {
       });
     });
   }
+  /**
+   * logout method
+   */
   logout() {
     console.log("logout=>" + this.state.userId);
     this.props.updateState(false);
@@ -49,18 +52,16 @@ class ListAllUsers extends Component {
   }
 
   componentDidMount() {
-    console.log('userid=>'+this.props.isLoggedIn)
-    if(this.props.isLoggedIn){
+    console.log("userid=>" + this.props.isLoggedIn);
+    if (this.props.isLoggedIn) {
       UserService.getAllUsers().then((res) => {
         console.log("data: ", res.data);
         this.setState({ users: res.data });
       });
+    } else {
+      alert("Please Login");
+      this.props.history.push("/login");
     }
-    else{
-      alert('Please Login');
-      this.props.history.push('/login');
-    }
-    
   }
 
   render() {
@@ -134,7 +135,7 @@ class ListAllUsers extends Component {
 }
 const mapStateToProps = (mystate) => {
   return {
-    isLoggedIn: mystate.isLoggedIn
+    isLoggedIn: mystate.isLoggedIn,
   };
 };
 

@@ -9,7 +9,6 @@ import Login from "./component/login";
 import Home from "./component/home";
 import customer from "./component/customer";
 
-
 function App() {
   return (
     <div>

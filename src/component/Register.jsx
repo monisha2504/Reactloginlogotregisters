@@ -26,6 +26,9 @@ class Register extends Component {
     this.changeMobileNumberHandler = this.changeMobileNumberHandler.bind(this);
     this.changeUserRoleHandler = this.changeUserRoleHandler.bind(this);
   }
+  /**
+   * schema to validate
+   */
   schema = {
     userId: Joi.string().min(4).alphanum().required(),
     firstName: Joi.string().min(2).max(10).required(),
@@ -35,6 +38,10 @@ class Register extends Component {
     mobileNumber: Joi.string().min(10).max(10).required(),
     userRole: Joi.string().required(),
   };
+  /**
+   * form validation
+   *
+   */
   validate = () => {
     const errors = {};
     const result = Joi.validate(this.state, this.schema, {
@@ -50,12 +57,19 @@ class Register extends Component {
 
     return Object.keys(errors).length === 0 ? null : errors;
   };
+  /**
+   *
+   * method for handling form submit
+   */
   handleOnSubmit = async (e) => {
     e.preventDefault();
     console.log("userRole=>" + this.state.userRole);
+    /**
+     * calling validate method
+     */
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    console.log(errors)
+    console.log(errors);
     if (errors) return;
 
     let user = {
@@ -77,9 +91,18 @@ class Register extends Component {
     console.log("user => " + JSON.stringify(user));
 
     UserService.createUser(user).then((res) => {
-      this.props.history.push(`/login`);
+      if (res == null) {
+        alert((this.state.errors.userId = "UserId Already Exists login"));
+        this.forceUpdate();
+      } else {
+        this.props.history.push(`/login`);
+      }
     });
   };
+  /**
+   * method for handling input change
+   *
+   */
   changeUserIdHandler = (event) => {
     this.setState({ userId: event.target.value });
   };
@@ -120,14 +143,6 @@ class Register extends Component {
                 <h3 className="text-center">User Registration</h3>
                 <div className="card-body">
                   <div>
-                    {this.state.errors.error && (
-                      <div
-                        className="alert alert-danger w-50 mx-auto mt-3"
-                        role="alert"
-                      >
-                        {this.state.errors.error}
-                      </div>
-                    )}
                     <form
                       className=" border-rounded p-3 bg-light"
                       onSubmit={this.handleOnSubmit}
